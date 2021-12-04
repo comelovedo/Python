@@ -1,4 +1,4 @@
-#Calculation of profit on deposits in banks
+Calculation of profit on deposits in banks
 
 per_cent = {'ТКБ': 5.6, 'СКБ': 5.9, 'ВТБ': 4.28, 'СБЕР': 4.0}
 money = float(input("Input amount of deposit: "))
