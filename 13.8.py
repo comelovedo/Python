@@ -10,7 +10,7 @@ for i in range(1, ticket+1): # For i in a range from 1 to 999+, cause the ticket
         price.append(1390)
     else:
         print("Invalid value")
-    if ticket > 3: # Discount in 10% if amount of tickets > 3
+    if ticket > 3: # Discount in 10% if amount of tickets > 3 .
         print("Amount to pay with a 10% discount", sum(price) - ((sum(price) / 100) * 10), "rubles")
     else:
         print("Amount to pay:", sum(price), "rubles")
