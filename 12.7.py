@@ -11,5 +11,5 @@ print("Maximum profit for your deposit", deposit)
 #    deposit.append(float(money * i / 100))
 # deposit = [round(float(money * i / 100), 2) for i in list(per_cent.values())]
 #
-# print("Your deposit:", (money))
+# print("Your deposit is:", (money))
 # print("Maximum profit for your deposit", deposit)

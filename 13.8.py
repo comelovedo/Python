@@ -1,6 +1,6 @@
 ticket = int(input("Please input amount of tickets:"))
 price = []
-for i in range(1, ticket+1): # For i in range from 1 to 999+, cause the tickets have to be more than 0
+for i in range(1, ticket+1): # For i in a range from 1 to 999+, cause the tickets have to be more than 0
     age = int(input(f"Input the age {i} of customer: "))
     if age in range(0, 18):
         price.append(0)
