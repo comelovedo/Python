@@ -1,4 +1,4 @@
-from rectangle import Rectangle, Square, Circle
+from Figures import Rectangle, Square, Circle
 
 # Создаем два прямоугольника
 
@@ -12,7 +12,7 @@ print("Площадь вторго прямоугольника:", rect_2.get_ar
 square_1 = Square(5)
 square_2 = Square(10)
 
-# Возводин в квадрат аши переменные
+# Возводин в квадрат наши переменные
 
 print("Квадрат первой переменной", square_1.get_area_square(),
       "Квадрат второй переменной", square_2.get_area_square())
@@ -26,8 +26,8 @@ figures = [rect_1, rect_2, square_1, square_2, circle_2, circle_1]
 #
 # Если экземпляр класса figure является квадратом,
 # то вызываем метод get_area_square().
-
-# В противном случае — обрабатываем данные для прямоугольника методом get_area().
+# Если прямоугольником то get_area().
+# Если кругом, обрабатываем данные для круга методом get_area_Circle().
 
 # isinstance, поддерживающая наследование. Она проверяет, является ли
 # аргумент объекта экземпляром класса или экземпляром класса из кортежа
