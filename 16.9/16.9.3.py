@@ -1,3 +1,4 @@
 #
 
-class e_wallet:
+class E_Wallet:
+    def__init__
