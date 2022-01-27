@@ -1,5 +1,5 @@
 # Телеграм Бот
-
+#
 # Content types:
 # audio — аудиозапись;
 # photo — фотография, картинка;
@@ -20,8 +20,8 @@
 # migrate_to_chat_id
 # migrate_from_chat_id
 # pinned_message
-
-
+#
+#
 # import telebot
 #
 # TOKEN = "5263070884:AAGRUPhMy68le_bYaj_9XHMyUB8DlMFmdLY"
@@ -35,8 +35,8 @@
 #
 #
 # bot.polling(none_stop=True)
-
-
+#
+#
 # import telebot
 #
 # TOKEN = "5263070884:AAGRUPhMy68le_bYaj_9XHMyUB8DlMFmdLY"
@@ -56,7 +56,7 @@
 #
 #
 # bot.polling(none_stop=True)
-
-
-
-
+#
+#
+#
+#
