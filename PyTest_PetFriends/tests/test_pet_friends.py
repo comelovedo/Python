@@ -1,6 +1,7 @@
 from api import PetFriends
 from settings import valid_password, valid_email, invalid_email, invalid_age, invalid_name
 import os
+import pytest
 
 pf = PetFriends()
 
