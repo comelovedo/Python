@@ -1,7 +1,6 @@
-from api import PetFriends
-from settings import valid_password, valid_email, invalid_email, invalid_age, invalid_name
+from PyTest_PetFriends.api import PetFriends
+from PyTest_PetFriends.settings import valid_password, valid_email, invalid_email, invalid_age, invalid_name
 import os
-import pytest
 
 pf = PetFriends()
 
@@ -48,7 +47,7 @@ def test_add_new_pet_with_valid_data(name='Барбоскин', animal_type='д�
 
 
 def test_add_new_pet_with_invalid_name(name=invalid_name, animal_type='двортерьер',
-                                     age='4', pet_photo='images/cat_1.jpeg'):
+                                       age='4', pet_photo='images/cat_1.jpeg'):
     """Проверяем что можно добавить питомца с  не валидным именем"""
 
     # Получаем полный путь изображения питомца и сохраняем в переменную pet_photo
@@ -66,7 +65,7 @@ def test_add_new_pet_with_invalid_name(name=invalid_name, animal_type='двор�
 
 
 def test_add_new_pet_with_invalid_age(name=invalid_name, animal_type='двортерьер',
-                                     age=invalid_age, pet_photo='images/cat_1.jpeg'):
+                                      age=invalid_age, pet_photo='images/cat_1.jpeg'):
     """Проверяем что можно добавить питомца с  не валидным именем"""
 
     # Получаем полный путь изображения питомца и сохраняем в переменную pet_photo
@@ -81,6 +80,7 @@ def test_add_new_pet_with_invalid_age(name=invalid_name, animal_type='дворт
     # Сверяем полученный ответ с ожидаемым результатом
     assert status == 200
     assert result['name'] == name
+
 
 def test_add_information_about_pet_without_photo(name='Пингвинятина', animal_type='Млекосос', age='54'):
     _, auth_key = pf.get_api_key(valid_email, valid_password)
@@ -112,14 +112,13 @@ def test_successful_delete_self_pet():
     _, auth_key = pf.get_api_key(valid_email, valid_password)
     _, my_pets = pf.get_list_of_pets(auth_key, "my_pets")
 
-    # Проверяем - если список своих питомцев пустой, то добавляем нового и опять запрашиваем список своих питомцев
-    if len(my_pets['pets']) == 0:
-        pf.add_new_pet(auth_key, "Суперкот", "кот", "3", "images/cat_1.jpeg")
-        _, my_pets = pf.get_list_of_pets(auth_key, "my_pets")
-
-    # Берём id первого питомца из списка и отправляем запрос на удаление
+    # Проверяем - если список своих питомцев не пустой, Берём id первого питомца
+    # из списка и отправляем запрос на удаление и опять запрашиваем список своих питомцев
+    assert len(my_pets['pets']) > 0
     pet_id = my_pets['pets'][0]['id']
     status, _ = pf.delete_pet(auth_key, pet_id)
+
+    # Берём id первого питомца из списка и отправляем запрос на удаление
 
     # Ещё раз запрашиваем список своих питомцев
     _, my_pets = pf.get_list_of_pets(auth_key, "my_pets")
@@ -137,15 +136,12 @@ def test_successful_update_pet_info_negative_age(name='Мурзик', animal_typ
     _, my_pets = pf.get_list_of_pets(auth_key, "my_pets")
 
     # Еслди список не пустой, то пробуем обновить его имя, тип и возраст
-    if len(my_pets['pets']) > 0:
-        status, result = pf.update_pet_info(auth_key, my_pets['pets'][0]['id'], name, animal_type, age)
+    assert len(my_pets['pets']) > 0
+    status, result = pf.update_pet_info(auth_key, my_pets['pets'][0]['id'], name, animal_type, age)
 
-        # Проверяем что статус ответа = 200 и имя питомца соответствует заданному
-        assert status == 200
-        assert result['name'] == name
-    else:
-        # если спиок питомцев пустой, то выкидываем исключение с текстом об отсутствии своих питомцев
-        raise Exception("There is no my pets")
+    # Проверяем что статус ответа = 200 и имя питомца соответствует заданному
+    assert status == 200
+    assert result['name'] == name
 
 
 def test_successful_update_self_pet_info(name='Мурзик', animal_type='Котэ', age=5):
@@ -156,12 +152,9 @@ def test_successful_update_self_pet_info(name='Мурзик', animal_type='Ко�
     _, my_pets = pf.get_list_of_pets(auth_key, "my_pets")
 
     # Еслди список не пустой, то пробуем обновить его имя, тип и возраст
-    if len(my_pets['pets']) > 0:
-        status, result = pf.update_pet_info(auth_key, my_pets['pets'][0]['id'], name, animal_type, age)
+    assert len(my_pets['pets']) > 0, "There is no my pets"
+    status, result = pf.update_pet_info(auth_key, my_pets['pets'][0]['id'], name, animal_type, age)
 
-        # Проверяем что статус ответа = 200 и имя питомца соответствует заданному
-        assert status == 200
-        assert result['name'] == name
-    else:
-        # если спиок питомцев пустой, то выкидываем исключение с текстом об отсутствии своих питомцев
-        raise Exception("There is no my pets")
+    # Проверяем что статус ответа = 200 и имя питомца соответствует заданному
+    assert status == 200
+    assert result['name'] == name
