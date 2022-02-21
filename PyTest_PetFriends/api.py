@@ -18,7 +18,7 @@ class PetFriends:
             'email': email,
             'password': passwd,
         }
-        res = requests.get(self.base_url+'api/key', headers=headers)
+        res = requests.get(self.base_url + 'api/key', headers=headers)
         status = res.status_code
         result = ""
         try:

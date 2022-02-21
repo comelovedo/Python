@@ -20,6 +20,7 @@ def test_get_api_key_for_invalid_user(email=invalid_email, password=valid_passwo
     # Проверяем:
     assert status != 403
 
+
 def test_get_all_pets_with_valid_key(filter=''):
     _, auth_key = pf.get_api_key(valid_email, valid_password)
     status, result = pf.get_list_of_pets(auth_key, filter)
