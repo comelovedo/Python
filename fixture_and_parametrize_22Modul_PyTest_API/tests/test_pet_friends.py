@@ -1,15 +1,94 @@
-
-from PyTest_PetFriends.api import PetFriends
-from PyTest_PetFriends.settings import valid_password, valid_email, invalid_email, invalid_age, invalid_name
+import pytest
+from fixture_and_parametrize_22Modul_PyTest_API.api import PetFriends
+from fixture_and_parametrize_22Modul_PyTest_API.settings import valid_password, valid_email, invalid_email, invalid_age, invalid_name
 import os
 
 pf = PetFriends()
 
 
-def test_get_api_key_for_valid_user(email=valid_email, password=valid_password):
-    status, result = pf.get_api_key(email, password)
+"""Напишем вспомогательную функцию, которая будет генерировать нам строку длиной в n символов в файле теста:"""
+
+
+def generate_string(n):
+    return "x" * n
+
+
+def russian_chars():
+    return 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
+
+
+# Здесь мы взяли 20 популярных китайских иероглифов
+def chinese_chars():
+    return '的一是不了人我在有他这为之大来以个中上们'
+
+
+def special_chars():
+    return '|\\/!@#$%^&*()-_=+`~?"№;:[]{}'
+
+
+@pytest.mark.parametrize("filter",
+                         [''
+                             , 'my_pets'
+                             , generate_string(255)
+                             , generate_string(1001)
+                             , russian_chars()
+                             , russian_chars().upper()
+                             , chinese_chars()
+                             , special_chars()
+                             , 123
+                          ]
+    , ids=['empty string'
+        , 'only my pets'
+        , '255 symbols'
+        , 'more than 1000 symbols'
+        , 'russian'
+        , 'RUSSIAN'
+        , 'chinese'
+        , 'specials'
+        , 'digit'])
+@pytest.fixture(autouse=True)
+def get_key():
+    status, pytest.key = pf.get_api_key(valid_email, valid_password)
     assert status == 200
-    assert 'key' in result
+    assert 'key' in pytest.key
+    return pytest.key
+
+
+# def test_get_api_key_for_valid_user(email=valid_email, password=valid_password):
+#     status, result = pf.get_api_key(email, password)
+#     assert status == 200
+#     assert 'key' in result
+
+def test_get_all_pets_with_negative_filter(filter):
+    pytest.status, result = pf.get_list_of_pets(pytest.key, filter)
+
+    # Проверяем статус ответа
+    assert pytest.status == 400
+
+
+@pytest.mark.parametrize("filter",
+                         ['', 'my_pets'],
+                         ids=['empty string', 'only my pets'])
+def test_get_all_pets_with_valid_key(filter):
+    pytest.status, result = pf.get_list_of_pets(pytest.key, filter)
+
+    # Проверяем статус ответа
+    assert pytest.status == 200
+    assert len(result['pets']) > 0
+
+
+# def test_get_all_pets_with_valid_key(filter):
+#     """ Проверяем, что запрос всех питомцев возвращает не пустой список.
+#    Для этого сначала получаем api-ключ и сохраняем в переменную auth_key. Далее, используя этот ключ,
+#    запрашиваем список всех питомцев и проверяем, что список не пустой.
+#    Доступное значение параметра filter - 'my_pets' либо '' """
+#
+#     pytest.status, result = pf.get_list_of_pets(pytest.key, filter)
+#
+#     assert len(result['pets']) > 0
+
+
+
 
 
 def test_get_api_key_for_invalid_user(email=invalid_email, password=valid_password):
@@ -22,14 +101,13 @@ def test_get_api_key_for_invalid_user(email=invalid_email, password=valid_passwo
     assert status != 403
 
 
-def test_get_all_pets_with_valid_key(filter=''):
-    _, auth_key = pf.get_api_key(valid_email, valid_password)
+def test_get_all_pets_with_valid_key(get_key, filter=''):
+    auth_key = get_key
     status, result = pf.get_list_of_pets(auth_key, filter)
-    assert status == 200
     assert len(result['pets']) > 0
 
 
-def test_add_new_pet_with_valid_data(name='Барбоскин', animal_type='двортерьер',
+def test_add_new_pet_with_valid_data(get_key, name='Барбоскин', animal_type='двортерьер',
                                      age='4', pet_photo='images/cat_1.jpeg'):
     """Проверяем что можно добавить питомца с корректными данными"""
 
@@ -37,7 +115,7 @@ def test_add_new_pet_with_valid_data(name='Барбоскин', animal_type='д�
     pet_photo = os.path.join(os.path.dirname(__file__), pet_photo)
 
     # Запрашиваем ключ api и сохраняем в переменую auth_key
-    _, auth_key = pf.get_api_key(valid_email, valid_password)
+    auth_key = get_key
 
     # Добавляем питомца
     status, result = pf.add_new_pet(auth_key, name, animal_type, age, pet_photo)
