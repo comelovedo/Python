@@ -1,6 +1,6 @@
 
-from PyTest_PetFriends.api import PetFriends
-from PyTest_PetFriends.settings import valid_password, valid_email, invalid_email, invalid_age, invalid_name
+from PyTest_RESR_API_request_PetFriends.api import PetFriends
+from PyTest_RESR_API_request_PetFriends.settings import valid_password, valid_email, invalid_email, invalid_age, invalid_name
 import os
 
 pf = PetFriends()
